@@ -59,7 +59,7 @@ Hardware::Hardware()
 
 	navx = new AHRS(SerialPort::Port::kMXP);
 	wheelEncoder = new Encoder(DIO_PORT6,DIO_PORT7,false,Encoder::EncodingType::k2X);
-	wheelEncoder->SetDistancePerPulse(.036881419);
+	wheelEncoder->SetDistancePerPulse(.1043245862);
 	wheelEncoder->SetReverseDirection(true);
 
 	//wheelEncoder->SetDistancePerPulse(38/624);
