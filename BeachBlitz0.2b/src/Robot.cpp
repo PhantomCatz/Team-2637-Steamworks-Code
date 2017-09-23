@@ -375,7 +375,6 @@ public:
 			loopCount++;
 
 
-			encoderArray[dbgCount1] = hardware->wheelEncoder->Get();
 			dbgCount1++;
 			if (dbgCount1== VAR_1_BUFFER_SIZE)
 				dbgCount1=0;
