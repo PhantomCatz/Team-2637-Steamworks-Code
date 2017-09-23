@@ -183,7 +183,7 @@ public:
 
 		if(shooter>.7)
 		{
-			MAX_POWER = .8;
+			MAX_POWER = .85;
 			MIN_POWER = .65;
 		}
 		else
