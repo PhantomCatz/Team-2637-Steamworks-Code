@@ -130,19 +130,18 @@ public:
 			driver->setDriveControl(xboxDrive);
 		}
 		hardware->kickTimer->Reset();
-		hardware->kickTimer->Start();
 		while (hardware->kickTimer->Get() < 1)
 		{
 			hardware->kicker->Set(-0.4);
 			driver->setDriveControl(xboxDrive);
 		}
 		hardware->kicker->Set(0);
+		hardware->kickTimer->Stop();
 	}
 
 
 	void RobotPeriodic()
 	{
-		//shooterEncoderRate=hardware->shooterEncoder->GetRate();
 		shooter = .55+.3*(-.5*(joystickAux->GetRawAxis(SLIDER)-1));     //Control shooter speed with slider
 
 		if(shooter>.7)
@@ -186,11 +185,6 @@ public:
 		SmartDashboard::PutNumber("Autonomous v1 v2 v3",1);
 		SmartDashboard::PutNumber("shooter speed",shooter);
 		SmartDashboard::PutBoolean("Check if alliance has ground gear getter", false);
-
-		// pulses per rev, circumference of wheel,
-		//or drive for 2 seconds get number of pulses and total distance   the dist/pulses     //// plug that # for distance per pulse
-		// 0 is controller   1 is aux main 2 is aux test
-
 
 	}
 
@@ -350,8 +344,6 @@ public:
 
 
 
-			//SmartDashboard::PutNumber("wheelEncoder distance",hardware->wheelEncoder->GetDistance());
-			//SmartDashboard::PutNumber("wheelEncoder get", encoderCheckNumber);
 
 			currentAngle = hardware->navx->GetAngle();
 
@@ -359,7 +351,6 @@ public:
 
 			derivative = deltaAngle/deltaTime;
 
-			//driver->AutoArcade(speed, kP*(currentAngle + kD*derivative));
 			driver->AutoArcade(speed, straightkP*currentAngle + straightkD*derivative);
 
 			previousAngle = currentAngle;
