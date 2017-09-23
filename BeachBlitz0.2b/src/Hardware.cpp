@@ -47,7 +47,7 @@ Hardware::Hardware()
 	conveyor = new Spark(PWM_PORT3);
 	hopperBouncerLeft = new Spark(PWM_PORT4);
 	hopperBouncerRight = new Spark(PWM_PORT5);
-		hopperBouncerRight->SetInverted(true);
+	hopperBouncerRight->SetInverted(true);
 	hopper = new Servo(PWM_PORT6);
 
 
@@ -59,8 +59,9 @@ Hardware::Hardware()
 
 	navx = new AHRS(SerialPort::Port::kMXP);
 	wheelEncoder = new Encoder(DIO_PORT6,DIO_PORT7,false,Encoder::EncodingType::k2X);
-	wheelEncoder->SetDistancePerPulse(.1043245862);
+	wheelEncoder->SetDistancePerPulse(-0.052213115961);
 	wheelEncoder->SetReverseDirection(true);
+
 
 	//wheelEncoder->SetDistancePerPulse(38/624);
 		//pulses per revolution is 1440

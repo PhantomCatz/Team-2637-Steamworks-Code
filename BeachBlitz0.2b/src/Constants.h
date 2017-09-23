@@ -42,6 +42,7 @@
 	double TurnkP = 0.118, TurnkD = 0.0254;
 
 	#define VAR_1_BUFFER_SIZE 20
+	#define DEBUG_1_BUFFER_SIZE 500
 	#define USE_GEAR_BUTTON true
 	#define DONT_USE_GEAR_BUTTON false
 

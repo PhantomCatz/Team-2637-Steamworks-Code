@@ -3,7 +3,7 @@
 #include "hardware.h"
 #include "math.h"
 #include <timer.h>
-#include "iostream"
+#include <iostream>
 #include "Constants.h"
 #include  <stdio.h>
 
@@ -47,8 +47,10 @@ private:
 	double flyWheelSpeedArray[5];
 	double encoderArray[VAR_1_BUFFER_SIZE];
 
-	char charArray1[2000];
-	char charArray2[2000];
+	double angleArray[DEBUG_1_BUFFER_SIZE];
+	double timeArray[DEBUG_1_BUFFER_SIZE];
+
+
 
 public:
 	Robot()
@@ -160,16 +162,16 @@ public:
 
 		hardware->kickTimer->Reset();
 		hardware->kickTimer->Start();
-		while (hardware->kickTimer->Get() < 0.1) //0.2
+		while (hardware->kickTimer->Get() < 0.25) //0.2
 		{
-			hardware->kicker->Set(.4);  //0.05
+			hardware->kicker->Set(.35);  //.3 is too low
 			driver->setDriveControl(xboxDrive);
 		}
 		hardware->kickTimer->Reset();
 		hardware->kickTimer->Start();
-		while (hardware->kickTimer->Get() < 0.2) //0.2
+		while (hardware->kickTimer->Get() < 0.3) //0.2
 		{
-			hardware->kicker->Set(-0.4); //0.05
+			hardware->kicker->Set(-0.35); //.3 is too low
 			driver->setDriveControl(xboxDrive);
 		}
 		hardware->kicker->Set(0);
@@ -183,7 +185,7 @@ public:
 
 		if(shooter>.7)
 		{
-			MAX_POWER = .85;
+			MAX_POWER = .8;
 			MIN_POWER = .65;
 		}
 		else
@@ -273,17 +275,17 @@ public:
 
 
 
-	void PDTurnThreshold(double turnDegrees, int timeout)
+	void PDTurn(double turnDegrees, int timeout)
 
 	{
-		//hardware->navx->Reset();
-		Wait(.3);
+		hardware->navx->Reset();
+		Wait(.1);
+
 
 		bool done = false;
 
 		double TurnToDegrees = turnDegrees+hardware->navx->GetAngle();
-		double turnThreshold = 1.0;
-		double fineTuneThreshold = 7.0;
+		double turnThreshold = .1;
 		//double kP = 0.039, kD = 0.0147;
 		double currentError,previousError = 0;
 		double deltaError,derivative,deltaT;
@@ -293,7 +295,8 @@ public:
 		functionTimer->Start();
 		PDTimer->Reset();
 
-		while(fabs(hardware->navx->GetAngle()) < fabs(TurnToDegrees) + turnThreshold && done!=true)
+		while((fabs(hardware->navx->GetAngle()) < fabs(TurnToDegrees)-turnThreshold ||
+				fabs(hardware->navx->GetAngle()) > fabs(TurnToDegrees)+turnThreshold) && done!=true)
 		{
 			// make data array for deltaT,currentError; loop of about 100 + counter for how many loops
 			PDTimer->Stop();
@@ -303,23 +306,12 @@ public:
 
 
 
-
 			currentError = TurnToDegrees-hardware->navx->GetAngle();
 			deltaError = currentError-previousError;
 			derivative = deltaError/deltaT;
 
-			power = (TurnkP*currentError)+(TurnkD*derivative);
-
-			if (currentError < fineTuneThreshold)
-			power = 0.7;
-
-
-			if(turnDegrees>0)
+			power = .6*((TurnkP*currentError)+(TurnkD*derivative));
 			driver->AutoDrive(power,-power);
-
-			else // if turn degrees< 0
-			driver->AutoDrive(-power,power);
-
 
 			previousError = currentError;
 
@@ -440,34 +432,6 @@ public:
 		SmartDashboard::PutNumber("drive straight loop count",loopCount);
 
 
-		//DISPLAYS FIRST 10 MEASUREMENTS OF ENCODER->GET()
-		sprintf(charArray1, "%9.5f,%9.5f,%9.5f,%9.5f,%9.5f,%9.5f,%9.5f,%9.5f,%9.5f,%9.5f,",
-				encoderArray[0],
-				encoderArray[1],
-				encoderArray[2],
-				encoderArray[3],
-				encoderArray[4],
-				encoderArray[5],
-				encoderArray[6],
-				encoderArray[7],
-				encoderArray[8],
-				encoderArray[9]
-				);
-		SmartDashboard::PutString("characterArray1",charArray1);
-
-		sprintf(charArray2, "%9.5f,%9.5f,%9.5f,%9.5f,%9.5f,%9.5f,%9.5f,%9.5f,%9.5f,%9.5f,",
-				encoderArray[10],
-				encoderArray[11],
-				encoderArray[12],
-				encoderArray[13],
-				encoderArray[14],
-				encoderArray[15],
-				encoderArray[16],
-				encoderArray[17],
-				encoderArray[18],
-				encoderArray[19]
-				);
-		SmartDashboard::PutString("characterArray2",charArray2);
 	}
 	void middleAuto(int allianceColor)
 	{
@@ -486,9 +450,9 @@ public:
 
 		EncoderStraightDrive(-.7,33,T_RESET,.43,DONT_USE_GEAR_BUTTON); //  4/21/17 9:00 MW Original TimeOut Value  .5 Original Encoder Distance 40 Match 1 Value
 		if(allianceColor == BLUE_ALLIANCE)
-			PDTurnThreshold(-107,5);  //100
+			PDTurn(-107,5);  //100
 		else
-			PDTurnThreshold(107,5); //100
+			PDTurn(107,5); //100
 
 		EncoderStraightDrive(.7,56,T_RESET,2,DONT_USE_GEAR_BUTTON);//  4/21/17 8:57 MW  Original TimeOut Value 1.97  Original Encoder Distance 53 Match 1 Value
 																		//3:02 changed .7,49,1.87 to .7,56,2
@@ -502,11 +466,11 @@ public:
 		EncoderStraightDrive(.9,84.0,T_RESET,1,DONT_USE_GEAR_BUTTON);  //1. 90,0.7;  2.88.1.5;   time 1.64
 		if(allianceColor == BLUE_ALLIANCE)
 		{
-			PDTurnThreshold(-50,4);
+			PDTurn(-50,4);
 		}															//Navigate to gear
 		else
 		{
-			PDTurnThreshold(50,4);
+			PDTurn(50,4);
 		}
 		EncoderStraightDrive(.6,60.0,T_RESET,1.2,USE_GEAR_BUTTON);
 
@@ -523,9 +487,9 @@ public:
 			gearSequence(false);
 			EncoderStraightDrive(-.6,20.0,T_RESET,2,DONT_USE_GEAR_BUTTON);        //back up
 			if(allianceColor == BLUE_ALLIANCE)
-				PDTurnThreshold(50,2.5);
+				PDTurn(50,2.5);
 			else																//turn towards neutral zone
-				PDTurnThreshold(-50,2.5);
+				PDTurn(-50,2.5);
 			EncoderStraightDrive(.7,320.0,T_RESET,3.7,DONT_USE_GEAR_BUTTON);     //drive into neutral zone previously .7,250,3.7 AL
 		}
 		else                                                                  //if gear button is still not pressed
@@ -535,9 +499,9 @@ public:
 			{
 				gearSequence(true);
 				if(allianceColor == BLUE_ALLIANCE)
-					PDTurnThreshold(60,2.5);
+					PDTurn(60,2.5);
 				else																//turn towards neutral zone
-					PDTurnThreshold(-60,2.5);
+					PDTurn(-60,2.5);
 				EncoderStraightDrive(1,250.0,T_RESET,3.5,DONT_USE_GEAR_BUTTON);     //drive into neutral zone
 			}
 		}
@@ -584,9 +548,9 @@ public:
 			gearSequence(false);
 			EncoderStraightDrive(-.6,20.0,T_RESET,2,DONT_USE_GEAR_BUTTON);        //back up
 			if(allianceColor == BLUE_ALLIANCE)
-				PDTurnThreshold(-50,2.5);
+				PDTurn(-50,2.5);
 			else																//turn towards neutral zone
-				PDTurnThreshold(50,2.5);
+				PDTurn(50,2.5);
 			EncoderStraightDrive(.7,250.0,T_RESET,3,DONT_USE_GEAR_BUTTON);     //drive into neutral zone
 		}
 		else                                                                  //if gear button is still not pressed
@@ -596,9 +560,9 @@ public:
 			{
 				gearSequence(true);
 				if(allianceColor == BLUE_ALLIANCE)
-					PDTurnThreshold(-60,2.5);
+					PDTurn(-60,2.5);
 				else																//turn towards neutral zone
-					PDTurnThreshold(60,2.5);
+					PDTurn(60,2.5);
 				EncoderStraightDrive(1,250.0,T_RESET,3.5,DONT_USE_GEAR_BUTTON);     //drive into neutral zone
 			}
 		}
@@ -785,10 +749,10 @@ public:
 			EncoderStraightDrive(.5, 100, 5.0,5,true); //speed 10 distance 100 in, 5ms update time,5 sec timeout
 
 		if(joystickTest->GetRawButton(2)==1)
-			PDTurnThreshold(90, 3);
+			PDTurn(90, 3);
 
 		if(joystickTest->GetRawButton(3)==1)
-			PDTurnThreshold(-90, 3);
+			PDTurn(-90, 3);
 
 		if(joystickTest->GetRawButton(4)==1)
 		{
@@ -805,18 +769,20 @@ public:
 			hardware->leftFlywheel->Set(-.9);
 			hardware->rightFlywheel->Set(.9);
 		}
-		else if (joystickTest->GetRawButton(9)==1)
+		else if (joystickTest->GetRawButton(12)==1)
 		{
-			hardware->kicker->Set(.1);
+			PDTurn(-45, 3);
 		}
 		else if(joystickTest->GetRawButton(10)==1)
 		{
-			hardware->kicker->Set(-.1);
+			PDTurn(45, 3);
+
 		}
 		else
 			hardware->kicker->Set(0);
 
-
+		if(joystickTest->GetRawButton(11)==1)
+			hardware->navx->Reset();
 	}
 
 };
