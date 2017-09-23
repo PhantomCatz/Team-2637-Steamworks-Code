@@ -67,6 +67,8 @@ public:
 			flyWheelOn = false;
 		Wait(0.3);
 	}
+
+
 	void BANGBANG(double target)
 	{
 		double actualTarget = target*100.0+5.0;
@@ -88,7 +90,6 @@ public:
 	}
 
 
-
 	void toggleGearMech()
 	{
 		if(gearMechOpen)
@@ -101,8 +102,9 @@ public:
 			hardware->flaps->Set(SOLENOID_OPEN);
 			gearMechOpen=true;
 		}
-		Wait(.5);  //0.3
+		Wait(.5);
 	}
+
 
 	void gearSequence(bool closeFlaps)
 	{
@@ -122,16 +124,16 @@ public:
 
 		hardware->kickTimer->Reset();
 		hardware->kickTimer->Start();
-		while (hardware->kickTimer->Get() < 0.25) //0.2
+		while (hardware->kickTimer->Get() < 0.5) //0.2
 		{
-			hardware->kicker->Set(.35);  //.3 is too low
+			hardware->kicker->Set(1);
 			driver->setDriveControl(xboxDrive);
 		}
 		hardware->kickTimer->Reset();
 		hardware->kickTimer->Start();
-		while (hardware->kickTimer->Get() < 0.3) //0.2
+		while (hardware->kickTimer->Get() < 1)
 		{
-			hardware->kicker->Set(-0.35); //.3 is too low
+			hardware->kicker->Set(-0.4);
 			driver->setDriveControl(xboxDrive);
 		}
 		hardware->kicker->Set(0);
