@@ -67,7 +67,7 @@ Hardware::Hardware()
 		//gear ratio is 15/22
 
 	shooterEncoder = new Encoder (DIO_PORT0,DIO_PORT1,false,Encoder::EncodingType::k4X);
-	shooterEncoder->SetDistancePerPulse(.0654);
+	shooterEncoder->SetDistancePerPulse(.6047565);
 	shooterEncoder->SetReverseDirection(false);
 
 

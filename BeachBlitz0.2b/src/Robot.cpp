@@ -63,7 +63,7 @@ public:
 			flyWheelOn = true;
 		else
 			flyWheelOn = false;
-		Wait(.3);
+		Wait(0.3);
 	}
 	void BANGBANG(double target)
 	{
@@ -139,7 +139,7 @@ public:
 			hardware->flaps->Set(SOLENOID_OPEN);
 			gearMechOpen=true;
 		}
-		Wait(.3);
+		Wait(.5);  //0.3
 	}
 
 	void gearSequence(bool closeFlaps)
@@ -160,16 +160,16 @@ public:
 
 		hardware->kickTimer->Reset();
 		hardware->kickTimer->Start();
-		while (hardware->kickTimer->Get() < .3)
+		while (hardware->kickTimer->Get() < 0.1) //0.2
 		{
-			hardware->kicker->Set(.7);
+			hardware->kicker->Set(.4);  //0.05
 			driver->setDriveControl(xboxDrive);
 		}
 		hardware->kickTimer->Reset();
 		hardware->kickTimer->Start();
-		while (hardware->kickTimer->Get() < 1)
+		while (hardware->kickTimer->Get() < 0.2) //0.2
 		{
-			hardware->kicker->Set(-.3);
+			hardware->kicker->Set(-0.4); //0.05
 			driver->setDriveControl(xboxDrive);
 		}
 		hardware->kicker->Set(0);
@@ -276,7 +276,7 @@ public:
 	void PDTurnThreshold(double turnDegrees, int timeout)
 
 	{
-		hardware->navx->Reset();
+		//hardware->navx->Reset();
 		Wait(.3);
 
 		bool done = false;
@@ -606,6 +606,8 @@ public:
 
 	void AutonomousInit()
 	{
+		if(hardware->comp->GetClosedLoopControl()==false)
+			hardware->comp->SetClosedLoopControl(true);
 		if(gearMechOpen)
 			toggleGearMech();
 		int startPos = SmartDashboard::GetNumber("starting position", 1.0);
@@ -661,7 +663,8 @@ public:
 
 	void TeleopInit()
 	{
-		hardware->comp->SetClosedLoopControl(true);
+		if(hardware->comp->GetClosedLoopControl()==false)
+			hardware->comp->SetClosedLoopControl(true);
 		if(gearMechOpen)
 			toggleGearMech();
 	}
@@ -778,14 +781,41 @@ public:
 		}
 
 
-
-
 		if(joystickTest->GetRawButton(1)==1)
 			EncoderStraightDrive(.5, 100, 5.0,5,true); //speed 10 distance 100 in, 5ms update time,5 sec timeout
+
 		if(joystickTest->GetRawButton(2)==1)
 			PDTurnThreshold(90, 3);
+
 		if(joystickTest->GetRawButton(3)==1)
-			PDTurnThreshold(-90,3);
+			PDTurnThreshold(-90, 3);
+
+		if(joystickTest->GetRawButton(4)==1)
+		{
+			hardware->leftFlywheel->Set(-.5);
+			hardware->rightFlywheel->Set(.5);
+		}
+		else if(joystickTest->GetRawButton(6)==1)
+		{
+			hardware->leftFlywheel->Set(-.7);
+			hardware->rightFlywheel->Set(.7);
+		}
+		else if(joystickTest->GetRawButton(7)==1)
+		{
+			hardware->leftFlywheel->Set(-.9);
+			hardware->rightFlywheel->Set(.9);
+		}
+		else if (joystickTest->GetRawButton(9)==1)
+		{
+			hardware->kicker->Set(.1);
+		}
+		else if(joystickTest->GetRawButton(10)==1)
+		{
+			hardware->kicker->Set(-.1);
+		}
+		else
+			hardware->kicker->Set(0);
+
 
 	}
 
