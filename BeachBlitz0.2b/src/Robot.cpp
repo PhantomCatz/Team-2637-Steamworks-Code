@@ -71,7 +71,7 @@ public:
 	{
 		double actualTarget = target*100.0+5.0;
 
-		shooterEncoderRate = hardware->shooterEncoder->GetRate();   //slidingWindowDamp(flyWheelCount);
+		shooterEncoderRate = hardware->shooterEncoder->GetRate();
 
 		if (shooterEncoderRate <= actualTarget-BANGBANG_THRESHOLD)
 		{
@@ -87,46 +87,6 @@ public:
 		flyWheelCount++;
 	}
 
-
-	void slidingWindowDamp(int count)
-	{
-		switch(count)
-		{
-		case(1):
-			flywheelSpeed1=hardware->shooterEncoder->GetRate();//overSamplingDamp();
-			break;
-		case(2):
-			flywheelSpeed2=hardware->shooterEncoder->GetRate();//overSamplingDamp();
-			break;
-		case(3):
-			flywheelSpeed3=hardware->shooterEncoder->GetRate();//overSamplingDamp();
-			break;
-		case(4):
-			flywheelSpeed4=hardware->shooterEncoder->GetRate();//overSamplingDamp();
-			break;
-		case(5):
-			flywheelSpeed5=hardware->shooterEncoder->GetRate();//overSamplingDamp();
-			shooterEncoderRate = (flywheelSpeed1+flywheelSpeed2+flywheelSpeed3+flywheelSpeed4+flywheelSpeed5)/5;
-			break;
-		default:
-			flywheelSpeed1=flywheelSpeed2;
-			flywheelSpeed2=flywheelSpeed3;
-			flywheelSpeed3=flywheelSpeed4;
-			flywheelSpeed4=flywheelSpeed5;
-			flywheelSpeed5=hardware->shooterEncoder->GetRate();//overSamplingDamp();
-			shooterEncoderRate = (flywheelSpeed1+flywheelSpeed2+flywheelSpeed3+flywheelSpeed4+flywheelSpeed5)/5;
-			break;
-		}
-	}
-	double overSamplingDamp()
-	{
-		flyWheelSpeedArray[0]=hardware->shooterEncoder->GetRate();
-		flyWheelSpeedArray[1]=hardware->shooterEncoder->GetRate();
-		flyWheelSpeedArray[2]=hardware->shooterEncoder->GetRate();
-		flyWheelSpeedArray[3]=hardware->shooterEncoder->GetRate();
-		flyWheelSpeedArray[4]=hardware->shooterEncoder->GetRate();
-		return (flyWheelSpeedArray[0]+flyWheelSpeedArray[1]+flyWheelSpeedArray[2]+flyWheelSpeedArray[3]+flyWheelSpeedArray[4]);
-	}
 
 
 	void toggleGearMech()
