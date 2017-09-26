@@ -111,7 +111,7 @@ public:
 		driver->setDriveControl(xboxDrive);
 		if(gearMechOpen==false)
 			toggleGearMech();
-		Wait(.2);
+		Wait(.5);
 		kick();
 		if(closeFlaps == true){
 			toggleGearMech();
@@ -124,7 +124,7 @@ public:
 
 		hardware->kickTimer->Reset();
 		hardware->kickTimer->Start();
-		while (hardware->kickTimer->Get() < 0.5) //0.2
+		while (hardware->kickTimer->Get() < 0.4) //0.2
 		{
 			hardware->kicker->Set(1);
 			driver->setDriveControl(xboxDrive);
@@ -239,7 +239,7 @@ public:
 
 
 		bool done = false;
-
+		int PDTurnLoopcount=0;
 		double TurnToDegrees = turnDegrees+hardware->navx->GetAngle();
 		double turnThreshold = .1;
 		//double kP = 0.039, kD = 0.0147;
@@ -273,6 +273,10 @@ public:
 
 			if (functionTimer->Get() > timeout)
 				done = true;
+
+			SmartDashboard::PutNumber("PDTurn:NavxReading",hardware->navx->GetAngle());
+			SmartDashboard::PutNumber("PDTurn:TimerReading",functionTimer->Get());
+			SmartDashboard::PutNumber("PDTurn:LoopCount",PDTurnLoopcount);
 		}
 
 		driver->AutoDrive(0,0);
@@ -374,7 +378,14 @@ public:
 
 		}
 
+		if(speed<0)
+			driver->AutoArcade(.43,0);
+		else
+			driver->AutoArcade(-.43,0);
+
+		Wait(.3);
 		driver->AutoArcade(0,0);
+
 		functionTimer->Stop();
 
 
@@ -698,7 +709,7 @@ public:
 
 
 		if(joystickTest->GetRawButton(1)==1)
-			EncoderStraightDrive(.5, 100, 5.0,5,true); //speed 10 distance 100 in, 5ms update time,5 sec timeout
+			EncoderStraightDrive(.43, 100, 5.0,10,true); //speed 10 distance 100 in, 5ms update time,5 sec timeout
 
 		if(joystickTest->GetRawButton(2)==1)
 			PDTurn(90, 3);
