@@ -341,7 +341,7 @@ public:
 
 
 
-		while(fabs(hardware->wheelEncoder->GetDistance()) < distance+.5 && gearState==true && done != true)
+		while(fabs(hardware->wheelEncoder->GetDistance()) < distance && gearState==true && done != true)
 		{
 			if (useGearButton == true)
 				gearState = hardware->gearButton->Get();
@@ -355,7 +355,10 @@ public:
 
 			derivative = deltaAngle/deltaTime;
 
-			driver->AutoArcade(speed, straightkP*currentAngle + straightkD*derivative);
+			if(hardware->wheelEncoder->GetDistance - distance < 10)
+				driver->AutoArcade(.4, straightkP*currentAngle + straightkD*derivative);
+			else
+				driver->AutoArcade(speed, straightkP*currentAngle + straightkD*derivative);
 
 			previousAngle = currentAngle;
 
