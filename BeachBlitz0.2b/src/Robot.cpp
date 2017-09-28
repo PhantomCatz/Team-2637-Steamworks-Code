@@ -71,7 +71,7 @@ public:
 
 	void BANGBANG(double target)
 	{
-		double actualTarget = target*100.0+5.0;
+		double actualTarget = target*1102.380;
 
 		shooterEncoderRate = hardware->shooterEncoder->GetRate();
 
@@ -89,6 +89,26 @@ public:
 		flyWheelCount++;
 	}
 
+	/*void bangBang(double target)
+	{
+		double actualTarget = target*1102.38;
+
+		shooterEncoderRate = hardware->shooterEncoder->GetRate();
+
+		if ( shooterEncoderRate <= actualTarget - BANGBANG_THRESHOLD)
+		{
+			hardware->rightFlywheel->Set(-MAX_POWER);
+			hardware->leftFlywheel->Set(MAX_POWER);
+		}
+
+		else if ( shooterEncoderRate >= actualTarget+ BANGBANG_THRESHOLD)
+		{
+
+
+		}
+
+
+	}*/
 
 	void toggleGearMech()
 	{
@@ -142,18 +162,10 @@ public:
 
 	void RobotPeriodic()
 	{
-		shooter = .55+.3*(-.5*(joystickAux->GetRawAxis(SLIDER)-1));     //Control shooter speed with slider
+		shooter = .7+.1*(-.5*(joystickAux->GetRawAxis(SLIDER)-1));     //Control shooter speed with slider
 
-		if(shooter>.7)
-		{
-			MAX_POWER = .8;
-			MIN_POWER = .65;
-		}
-		else
-		{
-			MAX_POWER = .75;
-			MIN_POWER = .5;
-		}
+		MAX_POWER = .85;
+		MIN_POWER = .7;
 
 		flyWheelSpeed = hardware->shooterEncoder->GetRate();
 		SmartDashboard::PutNumber("Shooter Input Speed", shooter);
@@ -630,22 +642,20 @@ public:
 			toggleFlywheel();
 		if (joystickTest->GetRawButton(5)==1)
 			toggleFlywheel();
-		if(flyWheelOn)
-		{
-			//hardware->leftFlywheel->Set(-shooter);
-			//hardware->rightFlywheel->Set(shooter);
-			BANGBANG(.75);
+		if(flyWheelOn){
+			BANGBANG(shooter);
 		}
-		if(xboxDrive->GetBButton()){
-			BANGBANG(.55 );
-		}
-
 		else
 		{
 			hardware->rightFlywheel->Set(0);
 			hardware->leftFlywheel->Set(0);
 			flyWheelCount=1;
 		}
+		if(xboxDrive->GetBButton()){
+			BANGBANG(.55 );
+		}
+
+
 
 
 		//CONVEYOR
@@ -718,23 +728,29 @@ public:
 			PDTurn(90, 3);
 
 		if(joystickTest->GetRawButton(3)==1)
-			PDTurn(-90, 3);
+		{
+			hardware->leftFlywheel->Set(-0.2);
+			hardware->rightFlywheel->Set(0.2);
+		}
 
 		if(joystickTest->GetRawButton(4)==1)
 		{
-			hardware->leftFlywheel->Set(-.5);
-			hardware->rightFlywheel->Set(.5);
+			hardware->leftFlywheel->Set(-0.4);
+			hardware->rightFlywheel->Set(0.4);
 		}
-		else if(joystickTest->GetRawButton(6)==1)
+
+		if(joystickTest->GetRawButton(6)==1)
 		{
-			hardware->leftFlywheel->Set(-.7);
-			hardware->rightFlywheel->Set(.7);
+			hardware->leftFlywheel->Set(-0.8);
+			hardware->rightFlywheel->Set(0.8);
 		}
-		else if(joystickTest->GetRawButton(7)==1)
+
+		if(joystickTest->GetRawButton(7)==1)
 		{
-			hardware->leftFlywheel->Set(-.9);
-			hardware->rightFlywheel->Set(.9);
+			hardware->leftFlywheel->Set(-0.6);
+			hardware->rightFlywheel->Set(0.6);
 		}
+
 		else if (joystickTest->GetRawButton(12)==1)
 		{
 			PDTurn(-45, 3);
