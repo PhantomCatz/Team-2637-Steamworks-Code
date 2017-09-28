@@ -355,7 +355,7 @@ public:
 
 			derivative = deltaAngle/deltaTime;
 
-			if(hardware->wheelEncoder->GetDistance - distance < 10)
+			if((hardware->wheelEncoder->GetDistance() - distance) < 10)
 				driver->AutoArcade(.4, straightkP*currentAngle + straightkD*derivative);
 			else
 				driver->AutoArcade(speed, straightkP*currentAngle + straightkD*derivative);
