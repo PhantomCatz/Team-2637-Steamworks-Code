@@ -205,7 +205,7 @@ public:
 		AutoDrive(-1,1);
 		Wait(.05);
 		AutoDrive(1,-1);
-		Wait(.07);
+		Wait(.05);
 		AutoDrive(0,0);
 	}
 	void autoShootSequ( double autoShooterSpeed)
@@ -507,7 +507,7 @@ public:
 
 	void middleAuto(int allianceColor)
 	{
-		EncoderStraightDrive(.5,(113-36.5+42),T_RESET,3.1,USE_GEAR_BUTTON); //original distance TV 113-36.5-17 + DD original speed 0.7 10-7-17
+		EncoderStraightDrive(.5,(130),T_RESET,3.1,USE_GEAR_BUTTON); //original distance TV 113-36.5-17 + DD original speed 0.7 10-7-17
 		//EncoderNoBrake(.5,20,T_RESET,3.1,USE_GEAR_BUTTON);
 
 		if(hardware->gearButton->Get()==true)
@@ -520,11 +520,12 @@ public:
 
 		EncoderStraightDrive(-.7,33,T_RESET,3.1,DONT_USE_GEAR_BUTTON); //  4/21/17 9:00 MW Original TimeOut Value  .5 Original Encoder Distance 40 Match 1 Value
 		if(allianceColor == BLUE_ALLIANCE)
-			PDTurn(-107,5);  //100
+			PDTurn(-107,2.5);  //100
 		else
-			PDTurn(107,5); //100
+			PDTurn(107,2.5); //100
 
-		EncoderStraightDrive(.7,56,T_RESET,2.7,DONT_USE_GEAR_BUTTON);//3.1  4/21/17 8:57 MW  Original TimeOut Value 1.97  Original Encoder Distance 53 Match 1 Value
+		EncoderStraightDrive(.7,60,T_RESET,2.7,DONT_USE_GEAR_BUTTON);//changed distance to 60
+
 																		//3:02 changed .7,49,1.87 to .7,56,2
 		autoShootSequ(.55);  //0.7											// 4/21/17 9:58 MW Original TimeOut Value 1.8 Original Encoder Distance 44 Match 2 Values
 		if(gearMechOpen)
@@ -714,9 +715,9 @@ public:
 
 		//BOUNCERS AND INTAKE
 		driver->setDriveControl(xboxDrive);
-		//hardware->climber->Set(-xboxDrive->GetRawAxis(LEFT_TRIGGER));
-		if(xboxDrive->GetRawAxis(LEFT_TRIGGER) > 0.1)
-			hardware->climber->Set(0.8);
+		hardware->climber->Set(-xboxDrive->GetRawAxis(LEFT_TRIGGER));
+		//if(xboxDrive->GetRawAxis(LEFT_TRIGGER) > 0.1)
+			//hardware->climber->Set(0.8);
 		if(xboxDrive->GetRawAxis(RIGHT_TRIGGER)>0.1||flyWheelOn||xboxDrive->GetBButton())
 		{
 			hardware->hopperBouncerLeft->Set(1);
@@ -748,8 +749,6 @@ public:
 		if(xboxDrive->GetBButton()){
 			BANGBANG(.55);
 		}
-
-
 
 
 		//CONVEYOR
