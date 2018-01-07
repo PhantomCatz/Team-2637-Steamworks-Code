@@ -1,3 +1,4 @@
+<title> Team Information </title>
 
 <body>
 <h1> The Phantom Catz, FRC Team 2637 </h1>
