@@ -624,6 +624,7 @@ public:
 				PDTurn(50,2.5);
 			EncoderStraightDrive(.7,250.0,T_RESET,3,DONT_USE_GEAR_BUTTON);     //drive into neutral zone
 		}
+		
 		else                                                                  //if gear button is still not pressed
 		{
 			EncoderStraightDrive(-.6,20.0,T_RESET,2,DONT_USE_GEAR_BUTTON);        //back up
