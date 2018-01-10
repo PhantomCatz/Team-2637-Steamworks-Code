@@ -53,14 +53,15 @@ public class Robot extends IterativeRobot {
 		if (joy.getRawButton(2) == true) {
 			shooterToggle = !shooterToggle;
 		}
+		
 		if (shooterToggle) {
 			rshooter.set(.65);
 			lshooter.set(-.65);
 			ljostler.set(.5);
 			rjostler.set(.5);
 		} 
-		else 
-		{
+		
+		else {
 			rshooter.set(0);
 			lshooter.set(0);
 			ljostler.set(0);
@@ -70,13 +71,15 @@ public class Robot extends IterativeRobot {
 
 		if (joy.getRawButton(1)) {
 			conveyor.set(1);
-		} else {
+		} 
+		else {
 			conveyor.set(0);
 		}
 
 		if (xbox.getRawAxis(3)>0.5) {
 			intake.set(-1);
-		} else {
+		} 
+		else {
 			intake.set(0);
 		}
 
