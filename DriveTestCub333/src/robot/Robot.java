@@ -1,4 +1,4 @@
-package org.usfirst.frc.team2637.robot;
+package robot;
 
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 
@@ -20,9 +20,17 @@ public class Robot extends IterativeRobot {
 	WPI_TalonSRX rleft;
 	SpeedControllerGroup right;
 	SpeedControllerGroup left;
+	
+	WPI_TalonSRX rshooter;
+	WPI_TalonSRX lshooter;
+	
 	DifferentialDrive driver;
 	
 	Spark kicker;
+	Spark intake;
+	Spark ljostler;
+	Spark rjostler;
+	Spark conveyor;
 	CatxXboxController xbox;
 	//RobotDrive driver;
 	Joystick joy;
@@ -33,8 +41,8 @@ public class Robot extends IterativeRobot {
 	
 	Timer kickTimer;
 	
-	boolean shooterToggle;
-	boolean gearMechOpen;
+	boolean shooterToggle=false;
+	boolean gearMechOpen=false;
 	
 	public Robot() 
 	{
@@ -66,8 +74,6 @@ public class Robot extends IterativeRobot {
 
 	public void teleopInit() {
 		driver.arcadeDrive(xbox.GetLeftStickY(), -xbox.GetRightStickX());
-		//comp.setClosedLoopControl(true);
-		gearMechOpen = false;
 	}
 	
 	public void toggleGearMech() {
@@ -122,6 +128,39 @@ public class Robot extends IterativeRobot {
 		driver.arcadeDrive(xbox.GetLeftStickY(), -xbox.GetRightStickX());
 		if(xbox.GetRightBumper()) {
 			this.gearSequence();
+		}
+		
+		if (joy.getRawButton(2) == true) {
+			shooterToggle = !shooterToggle;
+		}
+		
+		if (shooterToggle) {
+			rshooter.set(.75);
+			lshooter.set(-.75);
+			ljostler.set(.5);
+			rjostler.set(.5);
+		} 
+		
+		else {
+			rshooter.set(0);
+			lshooter.set(0);
+			ljostler.set(0);
+			rjostler.set(0);
+
+		}
+
+		if (joy.getRawButton(1)) {
+			conveyor.set(1);
+		} 
+		else {
+			conveyor.set(0);
+		}
+
+		if (xbox.GetRightTrigger()>0.5) {
+			intake.set(-1);
+		} 
+		else {
+			intake.set(0);
 		}
 
 	}
