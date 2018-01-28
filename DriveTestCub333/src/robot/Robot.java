@@ -1,12 +1,10 @@
-package robot;
+package org.usfirst.frc.team2637.robot;
 
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 
-import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.Joystick;
-import edu.wpi.first.wpilibj.RobotDrive;
 import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.Spark;
 import edu.wpi.first.wpilibj.SpeedControllerGroup;
@@ -27,10 +25,10 @@ public class Robot extends IterativeRobot {
 	DifferentialDrive driver;//
 	
 	Spark kicker;//
-	Spark intake;
-	Spark ljostler;
-	Spark rjostler;
-	Spark conveyor;
+	Spark intake;//
+	Spark ljostler;//
+	Spark rjostler;//
+	Spark conveyor;//
 	CatxXboxController xbox;//
 	Joystick joy;//
 	//Compressor comp;
@@ -70,6 +68,9 @@ public class Robot extends IterativeRobot {
 		ljostler = new Spark(4);
 		rjostler = new Spark(5);
 		conveyor = new Spark(3);
+		
+		lshooter = new WPI_TalonSRX(2);
+		rshooter = new WPI_TalonSRX(3);
 		
 	}
 

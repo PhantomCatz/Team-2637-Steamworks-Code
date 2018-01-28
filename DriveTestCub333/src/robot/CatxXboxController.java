@@ -1,4 +1,4 @@
-package robot;
+package org.usfirst.frc.team2637.robot;
 
 import edu.wpi.first.wpilibj.XboxController;
 
@@ -16,13 +16,11 @@ public class CatxXboxController
 	final int RIGHT_TRIGGER = 3;
 	final int RIGHT_STICK_X = 4;
 	final int RIGHT_STICK_Y = 5;
-	final String NAME;
 	XboxController xbox;
 	
 	
 	public CatxXboxController(int port)
 	{
-		NAME = this.getClass().getSimpleName();
 		xbox = new XboxController(port);
 		
 	}
