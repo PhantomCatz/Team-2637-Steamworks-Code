@@ -14,32 +14,31 @@ import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 
 public class Robot extends IterativeRobot {
-	WPI_TalonSRX fright;
-	WPI_TalonSRX fleft;
-	WPI_TalonSRX rright;
-	WPI_TalonSRX rleft;
-	SpeedControllerGroup right;
-	SpeedControllerGroup left;
+	WPI_TalonSRX fright;//
+	WPI_TalonSRX fleft;//
+	WPI_TalonSRX rright;//
+	WPI_TalonSRX rleft;//
+	SpeedControllerGroup right;//
+	SpeedControllerGroup left;//
 	
 	WPI_TalonSRX rshooter;
 	WPI_TalonSRX lshooter;
 	
-	DifferentialDrive driver;
+	DifferentialDrive driver;//
 	
-	Spark kicker;
+	Spark kicker;//
 	Spark intake;
 	Spark ljostler;
 	Spark rjostler;
 	Spark conveyor;
-	CatxXboxController xbox;
-	//RobotDrive driver;
-	Joystick joy;
+	CatxXboxController xbox;//
+	Joystick joy;//
 	//Compressor comp;
-	Solenoid gear;
+	Solenoid gear;//
 	
-	DigitalInput gearButton;
+	DigitalInput gearButton;//
 	
-	Timer kickTimer;
+	Timer kickTimer;//
 	
 	boolean shooterToggle=false;
 	boolean gearMechOpen=false;
@@ -67,7 +66,10 @@ public class Robot extends IterativeRobot {
 		
 		kickTimer = new Timer();
 		
-		
+		intake = new Spark(2);
+		ljostler = new Spark(4);
+		rjostler = new Spark(5);
+		conveyor = new Spark(3);
 		
 	}
 
