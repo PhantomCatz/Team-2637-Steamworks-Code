@@ -55,7 +55,7 @@ public class Robot extends IterativeRobot {
 		
 		//driver = new RobotDrive(fleft, rleft, fright, rright);
 		
-		joy = new Joystick(0);
+	//joy = new Joystick(0);
 		kicker = new Spark(1);
 		//comp = new Compressor(6);
 		gear = new Solenoid(1);
@@ -133,7 +133,7 @@ public class Robot extends IterativeRobot {
 			this.gearSequence();
 		}
 		
-		if (joy.getRawButton(2) == true) {
+		if (xbox.GetBButton() == true) {
 			shooterToggle = !shooterToggle;
 		}
 		
@@ -152,7 +152,7 @@ public class Robot extends IterativeRobot {
 
 		}
 
-		if (joy.getRawButton(1)) {
+		if (xbox.GetAButton()) {
 			conveyor.set(1);
 		} 
 		else {
